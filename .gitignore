@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+venv/
 env/
 build/
 develop-eggs/
@@ -31,14 +32,17 @@ ENV/
 *.swp
 *.swo
 
-# OS
-.DS_Store
-Thumbs.db
-
 # Project specific
-*.pt
-*.pth
-*.onnx
-*.weights
-*.h5
-*.pkl
+best.pt
+*.jpg
+*.jpeg
+*.png
+processed_test.jpg
+test_car.jpg
+
+# Logs
+*.log
+
+# Local development settings
+.env
+.env.local

@@ -1,83 +1,68 @@
-# License Plate Editor
+# License Plate Detection API
 
-A Flask web application that uses YOLOv8 to detect and replace license plates in images. The application allows users to upload a car image and either replace the detected license plate with custom text or another image.
+A FastAPI-based REST API for detecting and processing license plates in images using YOLO.
 
-## Features
+## Setup
 
-- License plate detection using YOLOv8
-- Upload car images for processing
-- Replace detected license plates with:
-  - Custom text
-  - Custom images
-- Modern, responsive UI
-- Real-time processing feedback
-
-## Prerequisites
-
-- Python 3.8 or higher
-- PyTorch
-- OpenCV
-- Flask
-- Ultralytics YOLOv8
-
-## Installation
-
-1. Clone the repository:
-
+1. Create a virtual environment:
 ```bash
-git clone https://github.com/YOUR_USERNAME/license-plate-app.git
-cd license-plate-app
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-2. Install the required packages:
-
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Download the YOLOv8 model:
+3. Make sure you have your YOLO model file (`best.pt`) in the root directory
 
-- Place your trained `best.pt` model file in the root directory
-- Or use a pre-trained model from Ultralytics
+4. Run the API:
+```bash
+uvicorn app.main:app --reload
+```
 
-## Usage
+The API will be available at `http://localhost:8000`
 
-1. Start the Flask application:
+## API Documentation
+
+Once the server is running, visit:
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+
+### Endpoints
+
+1. `POST /api/v1/detect`
+   - Detects license plates in an image
+   - Request: Form data with `image` file
+   - Response: JSON with detection boxes
+
+2. `POST /api/v1/process`
+   - Processes an image by replacing detected license plate with custom content
+   - Request: Form data with:
+     - `car_image`: Main image file
+     - `custom_image`: (Optional) Image to replace license plate
+     - `custom_text`: (Optional) Text to replace license plate
+   - Response: Processed image file
+
+## Example Usage
+
+Using curl:
 
 ```bash
-python app.py
+# Detect license plate
+curl -X POST "http://localhost:8000/api/v1/detect" \
+     -H "accept: application/json" \
+     -H "Content-Type: multipart/form-data" \
+     -F "image=@path/to/your/image.jpg"
+
+# Process image with custom text
+curl -X POST "http://localhost:8000/api/v1/process" \
+     -H "accept: image/jpeg" \
+     -H "Content-Type: multipart/form-data" \
+     -F "car_image=@path/to/car.jpg" \
+     -F "custom_text=ABC123"
 ```
-
-2. Open your web browser and navigate to:
-
-```
-http://localhost:5000
-```
-
-3. Upload a car image and optionally:
-
-   - Upload a custom image to replace the license plate
-   - Enter custom text to replace the license plate
-
-4. Click "Process Image" to detect and replace the license plate
-
-## Project Structure
-
-```
-license-plate-app/
-├── app.py              # Main Flask application
-├── best.pt            # YOLOv8 model weights
-├── requirements.txt   # Python dependencies
-└── README.md         # Project documentation
-```
-
-## Technical Details
-
-- Built with Flask for the backend
-- Uses YOLOv8 for license plate detection
-- OpenCV for image processing
-- Modern UI with responsive design
-- Error handling and loading states
 
 ## License
 
