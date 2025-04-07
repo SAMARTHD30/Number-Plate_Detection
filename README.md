@@ -9,7 +9,6 @@ git clone https://github.com/SAMARTHD30/Number-Plate_Detection-.git
 cd license-plate-detection-api
 ```
 
-```
 1. Create a virtual environment:
 ```bash
 python -m venv venv
