@@ -3,6 +3,11 @@
 A FastAPI-based REST API for detecting and processing license plates in images using YOLO.
 
 ## Setup
+0. Clone the repository:
+```bash
+git clone https://github.com/SAMARTHD30/Number-Plate_Detection-.git
+cd license-plate-detection-api
+```
 
 1. Create a virtual environment:
 ```bash
