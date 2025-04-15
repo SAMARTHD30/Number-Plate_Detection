@@ -8,7 +8,7 @@ from app.services.yolo_service import YOLOService
 from app.schemas.detection import DetectionResponse, ProcessRequest
 from typing import Dict
 
-router = APIRouter()
+router = APIRouter(prefix="/api/v1")
 yolo_service = YOLOService("best.pt")
 
 @router.get("/ping", response_model=Dict[str, str])

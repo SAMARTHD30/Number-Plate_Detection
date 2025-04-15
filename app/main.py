@@ -29,7 +29,6 @@ async def startup():
 # Include API routes with rate limiting
 app.include_router(
     api_router,
-    prefix="/api/v1",
     dependencies=[Depends(RateLimiter(times=10, minutes=1))]  # 10 requests per minute
 )
 
