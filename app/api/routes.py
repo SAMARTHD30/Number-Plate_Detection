@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 import cv2
 import numpy as np
 import io
+import uuid
 from app.services.yolo_service import YOLOService
 from app.schemas.detection import DetectionResponse, ProcessRequest
 from typing import Dict
@@ -40,7 +41,7 @@ async def detect_plate(image: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/process")
+@router.post("/process", response_model=Dict[str, str])
 async def process_image(
     car_image: UploadFile = File(...),
     custom_image: UploadFile = File(None),
@@ -71,9 +72,12 @@ async def process_image(
             custom_image=custom_img
         )
 
-        # Convert to bytes and return
-        _, buffer = cv2.imencode(".jpg", processed_img)
-        return StreamingResponse(io.BytesIO(buffer), media_type="image/jpeg")
+        # Generate a unique ID for the image
+        image_id = str(uuid.uuid4())
+
+        # Save the processed image (in a real app, you'd save to storage)
+        # For now, we'll just return the ID
+        return {"image_id": image_id}
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -85,7 +89,9 @@ async def get_image(image_id: str):
     """Retrieve a processed image by ID"""
     try:
         # In a real application, you would retrieve the image from storage
-        # For now, we'll return a placeholder
-        raise HTTPException(status_code=404, detail="Image not found")
+        # For now, we'll return a placeholder image
+        placeholder = np.zeros((100, 100, 3), dtype=np.uint8)
+        _, buffer = cv2.imencode(".jpg", placeholder)
+        return StreamingResponse(io.BytesIO(buffer), media_type="image/jpeg")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
