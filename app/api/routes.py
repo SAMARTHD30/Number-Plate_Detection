@@ -1,13 +1,23 @@
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends
 from fastapi.responses import JSONResponse, StreamingResponse
 import cv2
 import numpy as np
 import io
 from app.services.yolo_service import YOLOService
 from app.schemas.detection import DetectionResponse, ProcessRequest
+from typing import Dict
 
 router = APIRouter()
 yolo_service = YOLOService("best.pt")
+
+@router.get("/ping", response_model=Dict[str, str])
+async def ping():
+    """Check API status"""
+    return {
+        "status": "ok",
+        "message": "API is running",
+        "version": "1.0.0"
+    }
 
 @router.post("/detect", response_model=DetectionResponse)
 async def detect_plate(image: UploadFile = File(...)):
@@ -67,5 +77,15 @@ async def process_image(
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/image/{image_id}")
+async def get_image(image_id: str):
+    """Retrieve a processed image by ID"""
+    try:
+        # In a real application, you would retrieve the image from storage
+        # For now, we'll return a placeholder
+        raise HTTPException(status_code=404, detail="Image not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

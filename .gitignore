@@ -45,4 +45,5 @@ test_car.jpg
 
 # Local development settings
 .env
-.env.local
+.env.localbest.pt
+*.pt
